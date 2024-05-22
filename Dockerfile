@@ -1,7 +1,9 @@
-FROM nginx
+FROM nginx:latest
 LABEL marina=test
-RUN nginx sql curl ping 
+RUN apt-get update && \
+    apt-get install -y curl iputils-ping postgresql-client && \
+    rm -rf /var/lib/apt/lists/* 
 EXPOSE 8080 
 COPY ./text.sh /
 RUN chmod +x text.sh
-CMD ["postgres"]
+CMD ["nginx", "-g", "daemon off;"]
