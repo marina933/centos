@@ -1,9 +1,13 @@
-FROM nginx:latest
+FROM centos:latest
 LABEL marina=test
-RUN apt-get update && \
-    apt-get install -y curl iputils-ping postgresql-client && \
-    rm -rf /var/lib/apt/lists/* 
+ENV APP_NAME="MyCentOSApp"
+ENV APP_VERSION="1.0"
+RUN yum -y update && \
+    yum -y install epel-release && \
+    yum -y install nginx postgresql curl iputils && \
+    yum clean all
 EXPOSE 8080 
-COPY ./text.sh /
-RUN chmod +x text.sh
+COPY ./text.sh /usr/local/bin/text.sh
+RUN chmod +x /usr/local/bin/text.sh
+ENTRYPOINT ["/usr/local/bin/text.sh"]
 CMD ["nginx", "-g", "daemon off;"]
